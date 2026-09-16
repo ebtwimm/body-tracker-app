@@ -1,0 +1,21 @@
+name: Uptime Monitor
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Runs every 6 hours
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  check-health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check app endpoint
+        run: |
+          # Replace with your actual deployment URL when live
+          URL="https://example.com/health"
+          response=$(curl --write-out "%{http_code}" --silent --output /dev/null "$URL")
+          echo "Health check status code: $response"
+          if [ "$response" -ne 200 ] && [ "$response" -ne 000 ]; then
+            echo "Warning: Endpoint returned status $response"
+            exit 1
+          fi
